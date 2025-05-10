@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: run-financial-pipeline-
+spec:
+  pipelineRef:
+    name: financial-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentVolumeClaim:
+        claimName: finance-pvc

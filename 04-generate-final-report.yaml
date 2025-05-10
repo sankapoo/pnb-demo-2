@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: generate-final-report
+spec:
+  workspaces:
+    - name: data
+  steps:
+    - name: create-csv
+      image: registry.access.redhat.com/ubi8/ubi
+      script: |
+        #!/bin/sh
+        echo "📝 Creating final report.csv..."
+        cat /workspace/data/input.csv > /workspace/data/report.csv
+        echo "" >> /workspace/data/report.csv
+        echo "TOTAL," >> /workspace/data/report.csv
+        grep "Total Revenue" /workspace/data/output.txt | sed 's/Total Revenue:/Total Revenue,/' >> /workspace/data/report.csv
+        echo "✅ report.csv generated."

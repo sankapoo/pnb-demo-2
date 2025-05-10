@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: read-financial-data
+spec:
+  workspaces:
+    - name: data
+  steps:
+    - name: show-input
+      image: registry.access.redhat.com/ubi8/ubi
+      script: |
+        #!/bin/sh
+        echo "📥 Reading input financial data:"
+        cat /workspace/data/input.csv

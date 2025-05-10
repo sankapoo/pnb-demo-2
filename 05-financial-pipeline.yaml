@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: financial-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: read
+      taskRef:
+        name: read-financial-data
+      workspaces:
+        - name: data
+          workspace: shared-workspace
+
+    - name: process
+      taskRef:
+        name: process-financial-data
+      runAfter: [read]
+      workspaces:
+        - name: data
+          workspace: shared-workspace
+
+    - name: report
+      taskRef:
+        name: final-report
+      runAfter: [process]
+      workspaces:
+        - name: data
+          workspace: shared-workspace
+
+    - name: generate-csv
+      taskRef:
+        name: generate-final-report
+      runAfter: [ report ]
+      workspaces:
+        - name: data
+          workspace: shared-workspace
+

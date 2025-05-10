@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: final-report
+spec:
+  workspaces:
+    - name: data
+  steps:
+    - name: summarize
+      image: registry.access.redhat.com/ubi8/ubi
+      script: |
+        #!/bin/sh
+        echo "📤 Final Output:"
+        cat /workspace/data/output.txt
+        echo "🎯 Pipeline completed successfully!"
+
