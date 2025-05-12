@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: process-financial-data
+spec:
+  workspaces:
+    - name: data
+  steps:
+    - name: calculate
+      image: image-registry.openshift-image-registry.svc:5000/pnb-demo/python-39-slim
+      script: |
+        #!/usr/bin/env python3
+        import csv
+
+        input_path = "/workspace/data/input.csv"
+        output_path = "/workspace/data/output.txt"
+        total = 0
+
+        print("📊 Processing financial data...")
+        with open(input_path) as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                amount = float(row.get("revenue", 0))
+                total += amount
+
+        with open(output_path, "w") as out:
+            out.write("✅ Financial Data Processed\n")
+            out.write(f"Total Revenue: ₹{total:.2f}\n")
+            out.write("Well done! 🎉")
+
+        print("✅ Processing complete.")
